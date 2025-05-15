@@ -2,4 +2,7 @@ wget https://download.opensuse.org/repositories/home:/manuelschneid3r/Debian_12/
 sudo apt install xorg -y
 sudo apt install libx11-dev -y
 sudo apt install ./albert_0.27.8-0+701.1_amd64.deb -y
+make
+rm -f -- ~/.xinitrc
 echo "exec albert" >> ~/.xinitrc
+echo "exec $(realpath wm)" >> ~/.xinitrc
