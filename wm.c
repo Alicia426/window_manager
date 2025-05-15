@@ -75,7 +75,7 @@ int main(void)
      * to X.  so we never want to hard-code keycodes, because they can and will
      * differ between systems.
      */
-    XGrabKey(dpy, XKeysymToKeycode(dpy, XStringToKeysym("F1")), Mod1Mask,
+    XGrabKey(dpy, XKeysymToKeycode(dpy, XStringToKeysym("F1")), Mod4Mask,
             DefaultRootWindow(dpy), True, GrabModeAsync, GrabModeAsync);
 
     /* XGrabKey and XGrabButton are basically ways of saying "when this
@@ -86,9 +86,9 @@ int main(void)
      * XSelectInput with KeyPressMask/ButtonPressMask/etc to catch all events
      * of those types and filter them as you receive them.
      */
-    XGrabButton(dpy, 1, Mod1Mask, DefaultRootWindow(dpy), True,
+    XGrabButton(dpy, 1, Mod4Mask, DefaultRootWindow(dpy), True,
             ButtonPressMask|ButtonReleaseMask|PointerMotionMask, GrabModeAsync, GrabModeAsync, None, None);
-    XGrabButton(dpy, 3, Mod1Mask, DefaultRootWindow(dpy), True,
+    XGrabButton(dpy, 3, Mod4Mask, DefaultRootWindow(dpy), True,
             ButtonPressMask|ButtonReleaseMask|PointerMotionMask, GrabModeAsync, GrabModeAsync, None, None);
 
     start.subwindow = None;
