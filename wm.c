@@ -42,7 +42,7 @@ int main(void)
     Window root2;
 
     root2 = RootWindow(dpy, DefaultScreen(dpy));
-    XSetWindowBackground(dpy, root2, 34)
+    XSetWindowBackground(dpy, root2, 34);
 
     /* we use DefaultRootWindow to get the root window, which is a somewhat
      * naive approach that will only work on the default screen.  most people
