@@ -8,4 +8,4 @@ sudo apt install python3-xlib
 make
 rm -f -- ~/.xinitrc
 echo "exec albert" >> ~/.xinitrc
-echo "exec $(python3 realpath wm)" >> ~/.xinitrc
+echo "exec python3 $(realpath wm)" >> ~/.xinitrc
