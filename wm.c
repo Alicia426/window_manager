@@ -19,11 +19,15 @@
  * headers, like Xmd.h, keysym.h, etc.
  */
 #include <X11/Xlib.h>
+#include <X11/Xutil.h>
+
+#include <string.h>
+#include <stdio.h>
 
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 
 int main(void) {
-  Display *dpy;
+  Display *display;
   XWindowAttributes attr;
 
   /* we use this to save the pointer's state at the beginning of the
@@ -34,7 +38,7 @@ int main(void) {
   XEvent ev;
 
   /* return failure status if we can't connect */
-  if (!(dpy = XOpenDisplay(0x0)))
+  if (!(display = XOpenDisplay(0x0)))
     return 1;
 
   // Window root_window;
@@ -73,8 +77,8 @@ int main(void) {
    * to X.  so we never want to hard-code keycodes, because they can and will
    * differ between systems.
    */
-  XGrabKey(dpy, XKeysymToKeycode(dpy, XStringToKeysym("F1")), Mod4Mask,
-           DefaultRootWindow(dpy), True, GrabModeAsync, GrabModeAsync);
+  XGrabKey(display, XKeysymToKeycode(display, XStringToKeysym("F1")), Mod4Mask,
+           DefaultRootWindow(display), True, GrabModeAsync, GrabModeAsync);
 
   /* XGrabKey and XGrabButton are basically ways of saying "when this
    * combination of modifiers and key/button is pressed, send me the events."
@@ -84,10 +88,10 @@ int main(void) {
    * XSelectInput with KeyPressMask/ButtonPressMask/etc to catch all events
    * of those types and filter them as you receive them.
    */
-  XGrabButton(dpy, 1, Mod4Mask, DefaultRootWindow(dpy), True,
+  XGrabButton(display, 1, Mod4Mask, DefaultRootWindow(display), True,
               ButtonPressMask | ButtonReleaseMask | PointerMotionMask,
               GrabModeAsync, GrabModeAsync, None, None);
-  XGrabButton(dpy, 3, Mod4Mask, DefaultRootWindow(dpy), True,
+  XGrabButton(display, 3, Mod4Mask, DefaultRootWindow(display), True,
               ButtonPressMask | ButtonReleaseMask | PointerMotionMask,
               GrabModeAsync, GrabModeAsync, None, None);
 
@@ -97,7 +101,7 @@ int main(void) {
      * more flexible by using XPending(), or ConnectionNumber() along with
      * select() (or poll() or whatever floats your boat).
      */
-    XNextEvent(dpy, &ev);
+    XNextEvent(display, &ev);
 
     /* this is our keybinding for raising windows.  as i saw someone
      * mention on the ratpoison wiki, it is pretty stupid; however, i
@@ -112,14 +116,14 @@ int main(void) {
      * window that was grabbed on -- in this case, the root window.
      */
     if (ev.type == KeyPress && ev.xkey.subwindow != None)
-      XRaiseWindow(dpy, ev.xkey.subwindow);
+      XRaiseWindow(display, ev.xkey.subwindow);
     else if (ev.type == ButtonPress && ev.xbutton.subwindow != None) {
       /* we "remember" the position of the pointer at the beginning of
        * our move/resize, and the size/position of the window.  that way,
        * when the pointer moves, we can compare it to our initial data
        * and move/resize accordingly.
        */
-      XGetWindowAttributes(dpy, ev.xbutton.subwindow, &attr);
+      XGetWindowAttributes(display, ev.xbutton.subwindow, &attr);
       start = ev.xbutton;
     }
     /* we only get motion events when a button is being pressed,
@@ -160,7 +164,7 @@ int main(void) {
        */
       int xdiff = ev.xbutton.x_root - start.x_root;
       int ydiff = ev.xbutton.y_root - start.y_root;
-      XMoveResizeWindow(dpy, start.subwindow,
+      XMoveResizeWindow(display, start.subwindow,
                         attr.x + (start.button == 1 ? xdiff : 0),
                         attr.y + (start.button == 1 ? ydiff : 0),
                         MAX(1, attr.width + (start.button == 3 ? xdiff : 0)),

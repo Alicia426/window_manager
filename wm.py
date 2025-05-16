@@ -15,6 +15,8 @@ dpy.screen().root.grab_button(1, X.Mod1Mask, 1, X.ButtonPressMask|X.ButtonReleas
 dpy.screen().root.grab_button(3, X.Mod1Mask, 1, X.ButtonPressMask|X.ButtonReleaseMask|X.PointerMotionMask,
         X.GrabModeAsync, X.GrabModeAsync, X.NONE, X.NONE)
 
+
+
 start = None
 while 1:
     ev = dpy.next_event()
